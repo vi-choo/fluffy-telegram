@@ -20,6 +20,10 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SUPER_SECRETE_KEY") if os.getenv(
     "SUPER_SECRETE_KEY") else secrets.token_hex(16)
 
+
+print(f"Current working directory: {os.getcwd()}")
+print(f"PRESETS_PATH: {os.getenv("PRESETS_PATH")}")
+
 users: dict[str] = json.loads(os.getenv("USERS")) if os.getenv("USERS") else {}
 devices: dict[str] = json.loads(
     os.getenv("DEVICES")) if os.getenv("DEVICES") else {}
