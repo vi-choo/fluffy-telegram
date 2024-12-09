@@ -45,7 +45,27 @@ jobs:
         run: |
           bash .github/workflows/unit_tests.sh
 
-      - name: Upload Test Results (Optional)
+      - name: Run Mutation Tests
+        env:
+          USERS: ${{ secrets.USERS }}
+          DEVICES: ${{ vars.DEVICES }}
+          PRESETS_PATH: ${{ vars.PRESETS_PATH }}
+          UTILS_PATH: ${{ vars.UTILS_PATH }}
+          SUPER_SECRET_KEY: ${{ secrets.SUPER_SECRET_KEY }}
+        run: |
+          bash .github/workflows/mutation_tests.sh
+
+      - name: Run Integration Tests
+        env:
+          USERS: ${{ secrets.USERS }}
+          DEVICES: ${{ vars.DEVICES }}
+          PRESETS_PATH: ${{ vars.PRESETS_PATH }}
+          UTILS_PATH: ${{ vars.UTILS_PATH }}
+          SUPER_SECRET_KEY: ${{ secrets.SUPER_SECRET_KEY }}
+        run: |
+          bash .github/workflows/integration_tests.sh
+
+          - name: Upload Test Results (Optional)
         if: failure()
         uses: actions/upload-artifact@v3
         with:
