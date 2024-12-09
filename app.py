@@ -17,7 +17,8 @@ static_dir = root_dir / 'static'
 dotenv.load_dotenv(root_dir / '.env')
 
 app = Flask(__name__)
-app.secret_key = secrets.token_hex(16)
+app.secret_key = os.getenv("SUPER_SECRETE_KEY") if os.getenv(
+    "SUPER_SECRETE_KEY") else secrets.token_hex(16)
 
 users: dict[str] = json.loads(os.getenv("USERS")) if os.getenv("USERS") else {}
 devices: dict[str] = json.loads(

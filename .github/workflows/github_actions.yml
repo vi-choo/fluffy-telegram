@@ -25,7 +25,22 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Set environment variables
+        env:
+          USERS: ${{ secrets.USERS }}
+          DEVICES: ${{ vars.DEVICES }}
+          PRESETS_PATH: ${{ vars.PRESETS_PATH }}
+          UTILS_PATH: ${{ vars.UTILS_PATH }}
+          SUPER_SECRET_KEY: ${{ secrets.SUPER_SECRET_KEY }}
+        run: echo "Environment variables have been set."
+
       - name: Run Unit Tests
+        env:
+          USERS: ${{ secrets.USERS }}
+          DEVICES: ${{ vars.DEVICES }}
+          PRESETS_PATH: ${{ vars.PRESETS_PATH }}
+          UTILS_PATH: ${{ vars.UTILS_PATH }}
+          SUPER_SECRET_KEY: ${{ secrets.SUPER_SECRET_KEY }}
         run: |
           bash .github/workflows/unit_tests.sh
 
