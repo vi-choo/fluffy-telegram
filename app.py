@@ -31,7 +31,7 @@ devices: dict[str] = json.loads(
 with open(Path(os.getcwd()) / Path(os.getenv("PRESETS_PATH").strip('"'))) as r:
     presets = json.load(r)
 
-with open(os.getenv("UTILS_PATH")) as r:
+with open(Path(os.getcwd()) / Path(os.getenv("UTILS_PATH").strip('"'))) as r:
     utils = json.load(r)
 
 
