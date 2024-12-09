@@ -57,8 +57,6 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = strhashcode(request.form.get("password"))
-        print(username)
-        print(password)
 
         if username in users and users[username] == password:
             session["username"] = username
@@ -121,7 +119,6 @@ def registerdevice():
 
     if request.method == "POST":
         devicecode = request.form.get("devicecode")
-        print(devicecode)
         if not devicecode:
             return jsonify({'message': 'Device Code is required.'}), 400
 
