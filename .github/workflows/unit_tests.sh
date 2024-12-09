@@ -9,7 +9,7 @@
 set -e
 TEST_DIR="tests"
 
-echo "Current working directory: $(pwd)"
+echo "Current working directory (unigt_tests.sh): $(pwd)"
 
 cd "$(dirname "$0")/../../"
 
@@ -19,5 +19,5 @@ if [ ! -f "./presets.json" ]; then
 fi
 
 echo "Running unit tests..."
-pytest --junitxml=test-results/results.xml $TEST_DIR
+pytest --junitxml=test-results/results.xml $TEST_DIR -s
 echo "All tests passed!"

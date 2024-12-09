@@ -22,13 +22,13 @@ app.secret_key = os.getenv("SUPER_SECRETE_KEY") if os.getenv(
 
 
 print(f"Current working directory: {os.getcwd()}")
-print(f"PRESETS_PATH: {os.getenv("PRESETS_PATH")}")
+print(f"PRESETS_PATH: {os.getenv('PRESETS_PATH')}")
 
 users: dict[str] = json.loads(os.getenv("USERS")) if os.getenv("USERS") else {}
 devices: dict[str] = json.loads(
     os.getenv("DEVICES")) if os.getenv("DEVICES") else {}
 
-with open(os.getenv("PRESETS_PATH")) as r:
+with open(Path(os.getcwd()) / Path(os.getenv("PRESETS_PATH"))) as r:
     presets = json.load(r)
 
 with open(os.getenv("UTILS_PATH")) as r:
