@@ -28,7 +28,7 @@ users: dict[str] = json.loads(os.getenv("USERS")) if os.getenv("USERS") else {}
 devices: dict[str] = json.loads(
     os.getenv("DEVICES")) if os.getenv("DEVICES") else {}
 
-with open(Path(os.getcwd()) / Path(os.getenv("PRESETS_PATH").strip())) as r:
+with open(Path(os.getcwd()) / Path(os.getenv("PRESETS_PATH").strip('"'))) as r:
     presets = json.load(r)
 
 with open(os.getenv("UTILS_PATH")) as r:
