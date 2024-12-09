@@ -64,5 +64,3 @@ jobs:
           SUPER_SECRET_KEY: ${{ secrets.SUPER_SECRET_KEY }}
         run: |
           bash .github/workflows/integration_tests.sh
-
-          - name: Upload Test Results (Optional)
