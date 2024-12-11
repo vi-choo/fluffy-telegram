@@ -24,13 +24,13 @@ def test_index_endpoint(client):
     assert response.status_code == 200
 
 
-def test_get_login_page(client):
+def test_get_logout_page(client):
     response = client.get("/login")
     assert response.status_code == 200
     assert b"login" in response.data.lower()
 
 
-def test_login_success(client):
+def test_logout_success(client):
     response = client.post(
         "/login", data={"username": "test", "password": "test"}, follow_redirects=True)
     assert response.status_code == 200
@@ -38,7 +38,7 @@ def test_login_success(client):
         assert session["username"] == "test"
 
 
-def test_login_failure(client):
+def test_logout_failure(client):
     response = client.post(
         "/login", data={"username": "test1", "password": "test1"})
     assert response.status_code == 401
@@ -52,6 +52,6 @@ def test_already_logged_in(client):
     assert b"test" in response.data.lower()
 
 
-def test_login_empty_fields(client):
+def test_logout_empty_fields(client):
     response = client.post("/login", data={"username": "", "password": ""})
     assert response.status_code == 401
