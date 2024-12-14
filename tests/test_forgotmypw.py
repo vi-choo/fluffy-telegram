@@ -21,7 +21,7 @@ def client():
 
 def test_index_endpoint(client):
     response = client.get('/')
-    assert response.status_code == 200
+    assert response.status_code == 302
 
 
 def test_get_forgotmypw_page(client):
@@ -71,4 +71,4 @@ def test_forgotmypw_invalid_credentials(client):
 
 def test_index_endpoint2(client):
     response = client.get('/')
-    assert response.status_code == 200
+    assert response.status_code == 302
