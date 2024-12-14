@@ -8,6 +8,7 @@ import sys
 import json
 import random
 from hashlib import sha256
+import requests
 
 sys.path.append(str(Path(__file__).resolve().parent))
 
@@ -22,8 +23,9 @@ app.secret_key = os.getenv("SUPER_SECRETE_KEY") if os.getenv(
 
 
 users: dict[str] = json.loads(os.getenv("USERS")) if os.getenv("USERS") else {}
-devices: dict[str] = json.loads(
-    os.getenv("DEVICES")) if os.getenv("DEVICES") else {}
+
+with open(Path(os.getcwd()) / Path(os.getenv("DEVICES_PATH").strip('"'))) as r:
+    devices: dict = json.load(r)
 
 with open(Path(os.getcwd()) / Path(os.getenv("PRESETS_PATH").strip('"'))) as r:
     presets = json.load(r)
@@ -32,22 +34,71 @@ with open(Path(os.getcwd()) / Path(os.getenv("UTILS_PATH").strip('"'))) as r:
     utils = json.load(r)
 
 
-def analyzediseasehandler(username: str, device: str):
+def analyzediseasehandler(username: str, device: str) -> json:
     time.sleep(1)
     return utils[random.randint(0, len(utils)-1)]
 
 
-def strhashcode(s: str):
+def wateringhandler(username: str, device: str) -> json:
+    time.sleep(0.5)
+    return True
+
+
+def lightinghandler(username: str, device: str) -> json:
+    time.sleep(0.5)
+    return True
+
+
+def historyhandler(username: str, device: str) -> list[str] | list:
+    if username not in devices.keys():
+        return []
+    time.sleep(0.5)
+    return devices[username][device]["history"]
+
+
+def strhashcode(s: str) -> str:
     return sha256(s.encode('utf-8')).hexdigest()
 
 
-@app.route("/", methods=["GET", "POST"])
+def getdevices(username: str) -> list[str] | list:
+    if username not in devices.keys():
+        return []
+    return devices[username]
+
+
+@app.route("/", methods=["GET"])
 def index():
-    if "username" in session:
-        username = session["username"]
-        return f"Hello, {username}! <br><a href='/logout'>Logout</a>", 200
-    else:
-        return "You are not logged in. <br><a href='/login'>Login</a>", 200
+    if "username" not in session:
+        return redirect(url_for("login")), 302
+
+    username = session["username"]
+    user_devices = devices.get(username, {})
+
+    enriched_devices = []
+    for device_id, device_info in user_devices.items():
+        preset_key = device_info.get("preset")
+        preset = presets.get(preset_key, {})
+
+        enriched_devices.append({
+            "device_id": device_id,
+            "plant_name": preset.get("plantName", "Unknown Plant"),
+            "min_temp": preset.get("minTemp", "N/A"),
+            "max_temp": preset.get("maxTemp", "N/A"),
+            "min_moisture": preset.get("minMoisture", "N/A"),
+            "max_moisture": preset.get("maxMoisture", "N/A"),
+            "min_light": preset.get("minLight", "N/A"),
+            "max_light": preset.get("maxLight", "N/A"),
+            "optimal_water": preset.get("optimalWaterAmount", "N/A"),
+            "current_temp": device_info.get("temperature", "N/A"),
+            "current_moisture": device_info.get("moisture", "N/A"),
+            "current_light": device_info.get("light", "N/A"),
+            "last_watered": device_info.get("lastwateredtime", "N/A")
+        })
+    return render_template(
+        "index.html",
+        username=username,
+        devices=enriched_devices
+    ), 200
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -125,9 +176,9 @@ def registerdevice():
         username = session["username"]
 
         if username not in devices.keys() or devicecode not in devices[username]:
-            devices[username].append(devicecode)
+            devices[username][devicecode] = {}
             flash('Successfully registered', 'message')
-            return redirect(url_for("listdevice")), 302
+            return redirect(url_for("index")), 302
         else:
             flash('Already registered device', 'message')
             return redirect(url_for("registerdevice")), 302
@@ -141,7 +192,7 @@ def listdevice():
     username = session["username"]
     if username not in devices.keys():
         return jsonify({'status': 200, 'message': 'No devices detected', 'data': {'devices': []}}), 200
-    return jsonify({'status': 200, 'message': 'Successfully loaded your devices', 'data': {'devices': devices[username]}}), 200
+    return jsonify({'status': 200, 'message': 'Successfully loaded your devices', 'data': {'devices': getdevices(username)}}), 200
 
 
 @app.route('/analyzedisease/<string:device>', methods=['GET'])
@@ -150,9 +201,42 @@ def analyzedisease(device: str):
         return redirect(url_for("login")), 302
     username = session["username"]
     if username not in devices.keys() or device not in devices[username]:
-        return jsonify({'status': 200, 'message': 'No devices detected', 'data': {'devices': []}}), 200
+        return jsonify({'status': 200, 'message': 'No devices detected', 'data': {'result': []}}), 200
     result = analyzediseasehandler(username, device)
     return jsonify({'status': 200, 'message': 'Successfully loaded your devices', 'data': {'result': result}}), 200
+
+
+@app.route('/water/<string:device>', methods=['GET'])
+def water(device: str):
+    if "username" not in session:
+        return redirect(url_for("login")), 302
+    username = session["username"]
+    if username not in devices.keys() or device not in devices[username]:
+        return jsonify({'status': 200, 'message': 'No devices detected', 'data': {'result': False}}), 200
+    result = wateringhandler(username, device)
+    return jsonify({'status': 200, 'message': 'Successfully watered your plant', 'data': {'result': result}}), 200
+
+
+@app.route('/light/<string:device>', methods=['GET'])
+def light(device: str):
+    if "username" not in session:
+        return redirect(url_for("login")), 302
+    username = session["username"]
+    if username not in devices.keys() or device not in devices[username]:
+        return jsonify({'status': 200, 'message': 'No devices detected', 'data': {'result': False}}), 200
+    result = lightinghandler(username, device)
+    return jsonify({'status': 200, 'message': 'Successfully lighted your plant', 'data': {'result': result}}), 200
+
+
+@app.route('/history/<string:device>', methods=['GET'])
+def history(device: str):
+    if "username" not in session:
+        return redirect(url_for("login")), 302
+    username = session["username"]
+    if username not in devices.keys() or device not in devices[username]:
+        return jsonify({'status': 200, 'message': 'No devices detected', 'data': {'result': []}}), 200
+    result = historyhandler(username, device)
+    return jsonify({'status': 200, 'message': 'Successfully loaded your history', 'data': {'result': result}}), 200
 
 
 if __name__ == '__main__':

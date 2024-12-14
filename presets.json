@@ -1,6 +1,5 @@
-[
-  {
-    "id": "preset001",
+{
+  "preset001": {
     "plantName": "Ficus",
     "minTemp": 15,
     "maxTemp": 25,
@@ -11,8 +10,7 @@
     "minFloweringDarkness": 12,
     "optimalWaterAmount": 500
   },
-  {
-    "id": "preset002",
+  "preset002": {
     "plantName": "Succulent",
     "minTemp": 18,
     "maxTemp": 30,
@@ -23,8 +21,7 @@
     "minFloweringDarkness": 10,
     "optimalWaterAmount": 200
   },
-  {
-    "id": "preset003",
+  "preset003": {
     "plantName": "Orchid",
     "minTemp": 16,
     "maxTemp": 24,
@@ -35,8 +32,7 @@
     "minFloweringDarkness": 14,
     "optimalWaterAmount": 300
   },
-  {
-    "id": "preset004",
+  "preset004": {
     "plantName": "Snake Plant",
     "minTemp": 10,
     "maxTemp": 35,
@@ -47,8 +43,7 @@
     "minFloweringDarkness": 8,
     "optimalWaterAmount": 250
   },
-  {
-    "id": "preset005",
+  "preset005": {
     "plantName": "Peace Lily",
     "minTemp": 18,
     "maxTemp": 27,
@@ -59,4 +54,4 @@
     "minFloweringDarkness": 12,
     "optimalWaterAmount": 400
   }
-]
+}
