@@ -8,7 +8,6 @@ import sys
 import json
 import random
 from hashlib import sha256
-import requests
 
 sys.path.append(str(Path(__file__).resolve().parent))
 
