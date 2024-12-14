@@ -28,7 +28,7 @@ jobs:
       - name: Set environment variables
         env:
           USERS: ${{ secrets.USERS }}
-          DEVICES: ${{ vars.DEVICES }}
+          DEVICES_PATH: ${{ vars.DEVICES_PATH }}
           PRESETS_PATH: ${{ vars.PRESETS_PATH }}
           UTILS_PATH: ${{ vars.UTILS_PATH }}
           SUPER_SECRET_KEY: ${{ secrets.SUPER_SECRET_KEY }}
@@ -38,7 +38,7 @@ jobs:
       - name: Run Unit Tests
         env:
           USERS: ${{ secrets.USERS }}
-          DEVICES: ${{ vars.DEVICES }}
+          DEVICES_PATH: ${{ vars.DEVICES_PATH }}
           PRESETS_PATH: ${{ vars.PRESETS_PATH }}
           UTILS_PATH: ${{ vars.UTILS_PATH }}
           SUPER_SECRET_KEY: ${{ secrets.SUPER_SECRET_KEY }}
@@ -48,7 +48,7 @@ jobs:
       - name: Run Mutation Tests
         env:
           USERS: ${{ secrets.USERS }}
-          DEVICES: ${{ vars.DEVICES }}
+          DEVICES_PATH: ${{ vars.DEVICES_PATH }}
           PRESETS_PATH: ${{ vars.PRESETS_PATH }}
           UTILS_PATH: ${{ vars.UTILS_PATH }}
           SUPER_SECRET_KEY: ${{ secrets.SUPER_SECRET_KEY }}
@@ -58,7 +58,7 @@ jobs:
       - name: Run Integration Tests
         env:
           USERS: ${{ secrets.USERS }}
-          DEVICES: ${{ vars.DEVICES }}
+          DEVICES_PATH: ${{ vars.DEVICES_PATH }}
           PRESETS_PATH: ${{ vars.PRESETS_PATH }}
           UTILS_PATH: ${{ vars.UTILS_PATH }}
           SUPER_SECRET_KEY: ${{ secrets.SUPER_SECRET_KEY }}
